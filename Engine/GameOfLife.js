@@ -99,7 +99,7 @@ GameOfLife.prototype._generateNewBinaryGrid = function({ width, height, random }
 
 GameOfLife.prototype._randomizeGameGrid = grid => {
   for (let row in grid)
-    grid[row] = grid[row].map(c => (Math.random() > 0.555 ? 1 : 0));
+    grid[row] = grid[row].map(c => (Math.random() > 0.936 ? 1 : 0));
   return grid;
 };
 

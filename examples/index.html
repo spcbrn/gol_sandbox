@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>game of life</title>
+</head>
+<body>
+    <h1>Canvas Rendered (120 x 120):</h1>
+    <canvas
+        id="gCanvas"
+        width="840px"
+        height="840px"
+    ></canvas>
+    <h1>String Rendered (38 x 38):</h1>
+    <div id="gol_root"></div>
+
+    <script type="text/javascript">
+        let timeElapsed = 0;
+        const startTimer = () =>
+            window.setInterval(() => (timeElapsed++), 100);
+    </script>
+    <script type="text/javascript" src="./../Engine/GameOfLife.js"></script>
+    <script type="text/javascript" src="./../Engine/Cell.js"></script>
+    <script type="text/javascript" src="./../Engine/SeedFrames.js"></script>
+    <script type="text/javascript" src="./canvasRender.js"></script>
+    <script type="text/javascript" src="./stringRender.js"></script>
+</body>
+</html>

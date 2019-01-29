@@ -2,7 +2,7 @@
 
 Rather than running nested loops that compute the entire game matrix each frame, allow only the living and potentially living cells to handle their computation, while the rest undergo no change or computation.
 
- ## The LifeEngine is a class with:
+ ## The GameOfLife is a class with:
 
  ### A central pulse which:
   - Sets/maintains the frame rate.

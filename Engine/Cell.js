@@ -1,4 +1,4 @@
-export default function Cell({ x, y, living, bio_mode, game }) {
+function Cell({ x, y, living, bio_mode, game }) {
   this.game = game;
 
   this.coordinates = [x, y];

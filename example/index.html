@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>game of life</title>
+</head>
+<body>
+    <div id="gol_root"></div>
+
+    <script type="text/javascript" src="./../Engine/GameOfLife.js"></script>
+    <script type="text/javascript" src="./../Engine/Cell.js"></script>
+
+    <script type="text/javascript">
+        const root = document.getElementById('gol_root');
+        
+        const drawBinaryFrameString = (grid_binary, frames_elapsed) => {
+            root.innerHTML = `
+                <div style="">
+                    ${JSON.stringify(grid_binary)
+                        .replace(/(\],)/g, "<br>")
+                        .replace(/(\[|\])|(,|")/g, "")
+                        .replace(/0/g, "_" + "&nbsp;&nbsp;&nbsp;")
+                        .replace(/1/g, "0" + "&nbsp;&nbsp;&nbsp;")}
+                </div><br>
+                <b>${frames_elapsed}</b>
+            `;
+        };
+
+        const gameOfLife = new GameOfLife({
+            width: 42,
+            height: 42,
+            render: drawBinaryFrameString,
+            useRAF: true,
+            bio_mode: false,
+            random: true
+        })
+
+        gameOfLife._initializeGame(108)
+    </script>
+</body>
+</html>

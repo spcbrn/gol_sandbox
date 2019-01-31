@@ -27,6 +27,7 @@ class GameOfLife {
       })();
     
     this.bioMode = bio_mode || false;
+    
     this.dutyCycle = [];
     this.frameRegister = [];
     

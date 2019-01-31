@@ -11,7 +11,7 @@ function Cell({ x, y, living, bio_mode, game }) {
   this.living = living;
   this.bioMode = bio_mode;
 
-  this.bioMode
+  bio_mode
     ? (() => {
       this.dna = [];
       this.art = [];
@@ -33,7 +33,7 @@ Cell.prototype._initializeCell = function() {
     (() => {
       this.game._subscribeCellToDutyCycle(() => this._distributeLifeForce());
       this.bioMode &&
-        (this.dna = [this._produceDNA(), this._produceDNA(), this._produceDNA()]);
+        (this.dna = [this._produceBasePair(), this._produceBasePair(), this._produceBasePair()]);
     })();
 };
 
@@ -56,7 +56,7 @@ Cell.prototype.nModifiers = [
   [-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]
 ];
 
-Cell.prototype._produceDNA = function() {
+Cell.prototype._produceBasePair = function() {
   return (
     String.fromCharCode(Math.ceil(Math.random() * 25 + 65)) +
     String.fromCharCode(Math.ceil(Math.random() * 25 + 65))
@@ -83,16 +83,14 @@ Cell.prototype._distributeLifeForce = function() {
           neighbor._absorbLifeForce(this.bioMode && this._produceArt());
           nLiving++;
         })()
-      : neighbor._absorbLifeForce(this.bioMode && this._produceDNA());
+      : neighbor._absorbLifeForce(this.bioMode && this._produceBasePair());
   });
 
   !nLiving &&
     (this.bioMode
       ? this._absorbLifeForce(this._produceArt())
       : (() => {
-          this.game._subscribeCellToFrameRegister(
-            done => this._applyRules(done)
-          );
+          this.game._subscribeCellToFrameRegister(done => this._applyRules(done));
           this.subscribedToRegister = true;
         })());
 

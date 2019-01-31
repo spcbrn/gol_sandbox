@@ -41,88 +41,86 @@
         }
     };
     GameOfLife.prototype._initializeGame = function(interval, frame_limit = 0) {
-    this.interval = interval || 200;
-
-    this.useRequestAnimationFrame
-        ? window.requestAnimationFrame(this.render)
-        : this.render();
-
-    this._to = this._runGameLoop(frame_limit);
-    };
-    GameOfLife.prototype._runGameLoop = function(n) {
-    if (n && this.framesElapsed >= n) return clearTimeout(this._to);
-    return setTimeout(() => {
-        this._dispatchRunDutyCycle();
-        this._dispatchApplyRulesToRegister();
+        this.interval = interval || 200;
 
         this.useRequestAnimationFrame
-        ? window.requestAnimationFrame(this.render)
-        : this.render();
+            ? window.requestAnimationFrame(this.render)
+            : this.render();
 
-        this.framesElapsed++;
-        this._to = this._runGameLoop(n);
-    }, this.interval);
+        this._to = this._runGameLoop(frame_limit);
+        };
+    GameOfLife.prototype._runGameLoop = function(n) {
+        if (n && this.framesElapsed >= n) return clearTimeout(this._to);
+        return setTimeout(() => {
+            this._dispatchRunDutyCycle();
+            this._dispatchApplyRulesToRegister();
+
+            this.useRequestAnimationFrame
+            ? window.requestAnimationFrame(this.render)
+            : this.render();
+
+            this.framesElapsed++;
+            this._to = this._runGameLoop(n);
+        }, this.interval);
     };
     GameOfLife.prototype._populateGameGrid = function() {
-    this.gridBinary = this.gridBinary
-        ? this.gridBinary
-        : this._generateNewBinaryGrid({
-            width: this.width,
-            height: this.height,
-            random: this.useRandomGrid
-        });
+        this.gridBinary = this.gridBinary
+            ? this.gridBinary
+            : this._generateNewBinaryGrid({
+                width: this.width,
+                height: this.height,
+                random: this.useRandomGrid
+            });
 
-    this.grid = this.gridBinary.map((row, y) =>
-        row.map(
-        (cell, x) =>
-            new Cell({
-            x,
-            y,
-            living: cell,
-            bio_mode: this.bioMode,
-            game: this
-            })
-        )
-    );
+        this.grid = this.gridBinary.map((row, y) =>
+            row.map(
+            (cell, x) =>
+                new Cell({
+                x,
+                y,
+                living: cell,
+                bio_mode: this.bioMode,
+                game: this
+                })
+            )
+        );
     };
     GameOfLife.prototype._generateNewBinaryGrid = function({ width, height, random }) {
-    const newGrid = new Array(height).fill(new Array(width).fill(0));
-    return random ? this._randomizeGameGrid(newGrid) : newGrid;
+        const newGrid = new Array(height).fill(new Array(width).fill(0));
+        return random ? this._randomizeGameGrid(newGrid) : newGrid;
     };
     GameOfLife.prototype._randomizeGameGrid = grid => {
-    for (let row in grid)
-        grid[row] = grid[row].map(c => (Math.random() > 0.936 ? 1 : 0));
-    return grid;
+        for (let row in grid)
+            grid[row] = grid[row].map(c => (Math.random() > 0.936 ? 1 : 0));
+        return grid;
     };
     GameOfLife.prototype._subscribeCellToDutyCycle = function(callback) {
     this.dutyCycle.push(callback);
     };
     GameOfLife.prototype._dispatchRunDutyCycle = function() {
-    // prettier-ignore
-    this.dutyCycle = this.dutyCycle.filter(distributeLifeForce =>
-        typeof distributeLifeForce === "function"
-        ? (() => {
-            distributeLifeForce();
-            return false;
-        })()
-        : false
-    );
+        this.dutyCycle = this.dutyCycle.filter(distributeLifeForce =>
+            typeof distributeLifeForce === "function"
+            ? (() => {
+                distributeLifeForce();
+                return false;
+            })()
+            : false
+        );
     };
     GameOfLife.prototype._subscribeCellToFrameRegister = function(callback) {
-    this.frameRegister.push(callback);
+        this.frameRegister.push(callback);
     };
     GameOfLife.prototype._dispatchApplyRulesToRegister = function() {
-    // prettier-ignore
-    this.frameRegister = this.frameRegister.filter(applyRulesToCell =>
-        typeof applyRulesToCell === "function"
-        ? (() => {
-            applyRulesToCell((coords, living_next) => {
-            this.gridBinary[coords[1]][coords[0]] = living_next;
-            });
-            return false;
-        })()
-        : false
-    );
+        this.frameRegister = this.frameRegister.filter(applyRulesToCell =>
+            typeof applyRulesToCell === "function"
+            ? (() => {
+                applyRulesToCell((coords, living_next) => {
+                this.gridBinary[coords[1]][coords[0]] = living_next;
+                });
+                return false;
+            })()
+            : false
+        );
     };
     function Cell({ x, y, living, bio_mode, game }) {
         this.game = game;
@@ -150,110 +148,110 @@
         this._initializeCell();
     }
     Cell.prototype._living = function() {
-    return this.living === 1;
+        return this.living === 1;
     };
     Cell.prototype._initializeCell = function() {
-    this._living() &&
-        (() => {
-        this.game._subscribeCellToDutyCycle(() => this._distributeLifeForce());
-        this.bioMode &&
-            (this.dna = [this._produceDNA(), this._produceDNA(), this._produceDNA()]);
-        })();
+        this._living() &&
+            (() => {
+            this.game._subscribeCellToDutyCycle(() => this._distributeLifeForce());
+            this.bioMode &&
+                (this.dna = [this._produceDNA(), this._produceDNA(), this._produceDNA()]);
+            })();
     };
     Cell.prototype._getNeighborCoordinates = function() {
-    return this.nModifiers.map(modifier => {
-        const nX = this.x + modifier[0];
-        const nY = this.y + modifier[1];
+        return this.nModifiers.map(modifier => {
+            const nX = this.x + modifier[0];
+            const nY = this.y + modifier[1];
 
-        return nX >= 0 &&
-        nX < this.game.width &&
-        nY >= 0 &&
-        nY < this.game.height
-        ? [nX, nY]
-        : null;
+            return nX >= 0 &&
+            nX < this.game.width &&
+            nY >= 0 &&
+            nY < this.game.height
+            ? [nX, nY]
+            : null;
     });
     }
     Cell.prototype.nModifiers = [
-    [-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]
+        [-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]
     ];
     Cell.prototype._produceDNA = function() {
-    return (
-        String.fromCharCode(Math.ceil(Math.random() * 25 + 65)) +
-        String.fromCharCode(Math.ceil(Math.random() * 25 + 65))
-    );
+        return (
+            String.fromCharCode(Math.ceil(Math.random() * 25 + 65)) +
+            String.fromCharCode(Math.ceil(Math.random() * 25 + 65))
+        );
     };
     Cell.prototype._produceArt = function() {
-    return (
-        String.fromCharCode(Math.ceil(Math.random() * 103 + 152)) +
-        String.fromCharCode(Math.ceil(Math.random() * 103 + 152)) +
-        String.fromCharCode(Math.ceil(Math.random() * 103 + 152))
-    );
+        return (
+            String.fromCharCode(Math.ceil(Math.random() * 103 + 152)) +
+            String.fromCharCode(Math.ceil(Math.random() * 103 + 152)) +
+            String.fromCharCode(Math.ceil(Math.random() * 103 + 152))
+        );
     };
     Cell.prototype._distributeLifeForce = function() {
-    !this.nCoords.length &&
-        (this.nCoords = this._getNeighborCoordinates());
+        !this.nCoords.length &&
+            (this.nCoords = this._getNeighborCoordinates());
 
-    let nLiving = 0;
-    this.nCoords.forEach(n => {
-        if (n === null) return;
-        const neighbor = this.game.grid[n[1]][n[0]];
-        neighbor._living()
-        ? (() => {
-            neighbor._absorbLifeForce(this.bioMode && this._produceArt());
-            nLiving++;
-            })()
-        : neighbor._absorbLifeForce(this.bioMode && this._produceDNA());
-    });
+        let nLiving = 0;
+        this.nCoords.forEach(n => {
+            if (n === null) return;
+            const neighbor = this.game.grid[n[1]][n[0]];
+            neighbor._living()
+            ? (() => {
+                neighbor._absorbLifeForce(this.bioMode && this._produceArt());
+                nLiving++;
+                })()
+            : neighbor._absorbLifeForce(this.bioMode && this._produceDNA());
+        });
 
-    !nLiving &&
-        (this.bioMode
-        ? this._absorbLifeForce(this._produceArt())
-        : (() => {
-            this.game._subscribeCellToFrameRegister(
-                done => this._applyRules(done)
-            );
-            this.subscribedToRegister = true;
-            })());
+        !nLiving &&
+            (this.bioMode
+            ? this._absorbLifeForce(this._produceArt())
+            : (() => {
+                this.game._subscribeCellToFrameRegister(
+                    done => this._applyRules(done)
+                );
+                this.subscribedToRegister = true;
+                })());
 
-    return false;
+        return false;
     };
     Cell.prototype._absorbLifeForce = function (life_force) {
-    this.living
-        ? this.bioMode ? this.newArt.push(life_force) : this.livingNeighbors++
-        : this.bioMode ? this.dna.push(life_force) : this.livingNeighbors++;
+        this.living
+            ? this.bioMode ? this.newArt.push(life_force) : this.livingNeighbors++
+            : this.bioMode ? this.dna.push(life_force) : this.livingNeighbors++;
 
-    !this.subscribedToRegister && (() => {
-        this.game._subscribeCellToFrameRegister(done => this._applyRules(done));
-        this.subscribedToRegister = true;
-    })()
+        !this.subscribedToRegister && (() => {
+            this.game._subscribeCellToFrameRegister(done => this._applyRules(done));
+            this.subscribedToRegister = true;
+        })()
     };
     Cell.prototype._applyRules = function (done) {
-    const n = this.bioMode
-        ? this.living ? this.newArt.length : this.dna.length
-        : this.livingNeighbors;
-    const livingNext =
-        this.living === 1
-        ? n <= 1 || n >= 4 ? 0 : 1
-        : n === 3 ? 1 : 0
+        const n = this.bioMode
+            ? this.living ? this.newArt.length : this.dna.length
+            : this.livingNeighbors;
+        const livingNext =
+            this.living === 1
+            ? n <= 1 || n >= 4 ? 0 : 1
+            : n === 3 ? 1 : 0
 
-    livingNext && (() => {
-        this.game._subscribeCellToDutyCycle(() => this._distributeLifeForce());
-        this.living && this.bioMode &&
-            this.art.concat(this.newArt)
-    })()
+        livingNext && (() => {
+            this.game._subscribeCellToDutyCycle(() => this._distributeLifeForce());
+            this.living && this.bioMode &&
+                this.art.concat(this.newArt)
+        })()
 
-    !livingNext && this.bioMode && (() => {
-        // this.living && 
-        // console.log(this.dna.join('•') + ' - ' + [ ...this.newArt, ...this.art ].join(''))
-        this.dna = [];
-    })()
+        !livingNext && this.bioMode && (() => {
+            // this.living && 
+            // console.log(this.dna.join('•') + ' - ' + [ ...this.newArt, ...this.art ].join(''))
+            this.dna = [];
+        })()
 
-    this.living = livingNext;
-    this.subscribedToRegister = false;
-    this.bioMode
-        ? (this.newArt = [])
-        : (this.livingNeighbors = 0);
-    return done(this.coordinates, livingNext);
+        this.living = livingNext;
+        this.subscribedToRegister = false;
+        this.bioMode
+            ? (this.newArt = [])
+            : (this.livingNeighbors = 0);
+        return done(this.coordinates, livingNext);
     }
     
     const domRoot = document.createElement('div');

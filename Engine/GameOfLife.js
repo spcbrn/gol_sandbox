@@ -1,6 +1,4 @@
-// import Cell from "./Cell";
-
-class GameOfLife {
+class GameOfLife extends GameCore {
   constructor({
     width,
     height,
@@ -10,6 +8,8 @@ class GameOfLife {
     seed_frame,
     random
   }) {
+    super();
+
     this.width = width || 50;
     this.height = height || 50;
     
@@ -36,7 +36,7 @@ class GameOfLife {
     this.framesElapsed = 0;
     this.useRequestAnimationFrame = use_raf || true;
     this.render = ts => render(this.gridBinary, this.framesElapsed, ts);
-
+      console.log('whai')
     this._populateGameGrid();
   }
 }
@@ -66,42 +66,6 @@ GameOfLife.prototype._runGameLoop = function(n) {
     this.framesElapsed++;
     this._to = this._runGameLoop(n);
   }, this.interval);
-};
-
-/*------------------------ GAME GRID -------------------------*/
-
-GameOfLife.prototype._populateGameGrid = function() {
-  this.gridBinary = this.gridBinary
-    ? this.gridBinary
-    : this._generateNewBinaryGrid({
-        width: this.width,
-        height: this.height,
-        random: this.useRandomGrid
-      });
-
-  this.grid = this.gridBinary.map((row, y) =>
-    row.map(
-      (cell, x) =>
-        new Cell({
-          x,
-          y,
-          living: cell,
-          bio_mode: this.bioMode,
-          game: this
-        })
-    )
-  );
-};
-
-GameOfLife.prototype._generateNewBinaryGrid = function({ width, height, random }) {
-  const newGrid = new Array(height).fill(new Array(width).fill(0));
-  return random ? this._randomizeGameGrid(newGrid) : newGrid;
-};
-
-GameOfLife.prototype._randomizeGameGrid = grid => {
-  for (let row in grid)
-    grid[row] = grid[row].map(c => (Math.random() > 0.936 ? 1 : 0));
-  return grid;
 };
 
 /*------------------------- DUTY CYCLE -------------------------*/

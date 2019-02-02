@@ -41,5 +41,5 @@ golCanvas = new GameOfLife({
     useRAF: true,
     random: true
 })
-golCanvas._initializeGame(93);
+golCanvas._initializeGame(108);
 startTimer();

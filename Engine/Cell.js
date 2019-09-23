@@ -13,27 +13,31 @@ function Cell({ x, y, living, bio_mode, game }) {
 
   bio_mode
     ? (() => {
-      this.dna = [];
-      this.art = [];
-      this.newArt = [];
-    })()
-    : this.livingNeighbors = 0;
+        this.dna = [];
+        this.art = [];
+        this.newArt = [];
+      })()
+    : (this.livingNeighbors = 0);
 
   this.subscribedToRegister = false;
 
   this._initializeCell();
 }
 
-Cell.prototype._living = function() {
+Cell.prototype.isLiving = function() {
   return this.living === 1;
 };
 
 Cell.prototype._initializeCell = function() {
-  this._living() &&
+  this.isLiving() &&
     (() => {
       this.game._subscribeCellToDutyCycle(() => this._distributeLifeForce());
       this.bioMode &&
-        (this.dna = [this._produceBasePair(), this._produceBasePair(), this._produceBasePair()]);
+        (this.dna = [
+          this._produceBasePair(),
+          this._produceBasePair(),
+          this._produceBasePair()
+        ]);
     })();
 };
 
@@ -62,6 +66,7 @@ Cell.prototype._produceBasePair = function() {
     String.fromCharCode(Math.ceil(Math.random() * 25 + 65))
   );
 };
+
 Cell.prototype._produceArt = function() {
   return (
     String.fromCharCode(Math.ceil(Math.random() * 103 + 152)) +
@@ -71,14 +76,13 @@ Cell.prototype._produceArt = function() {
 };
 
 Cell.prototype._distributeLifeForce = function() {
-  !this.nCoords.length &&
-    (this.nCoords = this._getNeighborCoordinates());
+  !this.nCoords.length && (this.nCoords = this._getNeighborCoordinates());
 
   let nLiving = 0;
   this.nCoords.forEach(n => {
     if (n === null) return;
     const neighbor = this.game.grid[n[1]][n[0]];
-    neighbor._living()
+    neighbor.isLiving()
       ? (() => {
           neighbor._absorbLifeForce(this.bioMode && this._produceArt());
           nLiving++;
@@ -90,7 +94,9 @@ Cell.prototype._distributeLifeForce = function() {
     (this.bioMode
       ? this._absorbLifeForce(this._produceArt())
       : (() => {
-          this.game._subscribeCellToFrameRegister(done => this._applyRules(done));
+          this.game._subscribeCellToFrameRegister(done =>
+            this._applyRules(done)
+          );
           this.subscribedToRegister = true;
         })());
 
@@ -98,7 +104,7 @@ Cell.prototype._distributeLifeForce = function() {
 };
 
 // prettier-ignore
-Cell.prototype._absorbLifeForce = function (life_force) {
+Cell.prototype._absorbLifeForce = function(life_force) {
   this.living
     ? this.bioMode ? this.newArt.push(life_force) : this.livingNeighbors++
     : this.bioMode ? this.dna.push(life_force) : this.livingNeighbors++;
@@ -110,7 +116,7 @@ Cell.prototype._absorbLifeForce = function (life_force) {
 };
 
 // prettier-ignore
-Cell.prototype._applyRules = function (done) {
+Cell.prototype._applyRules = function(done) {
   const n = this.bioMode
     ? this.living ? this.newArt.length : this.dna.length
     : this.livingNeighbors;
@@ -127,7 +133,7 @@ Cell.prototype._applyRules = function (done) {
   
   !livingNext && this.bioMode && (() => {
     // this.living && 
-      // console.log(this.dna.join('•') + ' - ' + [ ...this.newArt, ...this.art ].join(''))
+    //   console.log(this.dna.join('•') + ' - ' + [ ...this.newArt, ...this.art ].join(''))
     this.dna = [];
   })()
   

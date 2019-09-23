@@ -42,7 +42,8 @@ golCanvas = new GameOfLife({
   height: gridHeight,
   render: drawRender,
   useRAF: true,
-  random: true
+  random: true,
+  bio_mode: true
 });
 golCanvas.initializeGame(108);
 startTimer();

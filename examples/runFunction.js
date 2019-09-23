@@ -151,11 +151,11 @@
 
     this._initializeCell();
   }
-  Cell.prototype._living = function() {
+  Cell.prototype.isLiving = function() {
     return this.living === 1;
   };
   Cell.prototype._initializeCell = function() {
-    this._living() &&
+    this.isLiving() &&
       (() => {
         this.game._subscribeCellToDutyCycle(() => this._distributeLifeForce());
         this.bioMode &&
@@ -206,7 +206,7 @@
     this.nCoords.forEach(n => {
       if (n === null) return;
       const neighbor = this.game.grid[n[1]][n[0]];
-      neighbor._living()
+      neighbor.isLiving()
         ? (() => {
             neighbor._absorbLifeForce(this.bioMode && this._produceArt());
             nLiving++;

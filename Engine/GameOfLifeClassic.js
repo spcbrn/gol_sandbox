@@ -1,59 +1,37 @@
-
 class GameOfLifeClassic extends GameCore {
-    constructor({
-        width,
-        height,
-        render,
-        use_raf,
-        seed_frame,
-        random
-    }) {
-        super();
+  constructor({ width, height, render, use_raf, seed_frame, random }) {
+    super();
 
+    this.width = width || 50;
+    this.height = height || 50;
 
-        this.width = width || 50;
-        this.height = height || 50;
-        
-        this.grid = null;
-        this.gridBinary = null;
-        this.useRandomGrid = random || false;
-        
-        seed_frame instanceof Array &&
-        seed_frame[0] instanceof Array &&
-        typeof seed_frame[0][0] === "number" &&
-          (() => {
-            this.gridBinary = seed_frame;
-            this.height = seed_frame.length;
-            this.width = seed_frame[0].length;
-          })();
+    this.grid = null;
+    this.gridBinary = null;
+    this.useRandomGrid = random || false;
 
-          this.interval = null;
-          this._to = null;
-          this.framesElapsed = 0;
-          this.useRequestAnimationFrame = use_raf || true;
-          this.render = ts => render(this.gridBinary, this.framesElapsed, ts);
-      
-          this._populateGameGrid();
-    }
+    seed_frame instanceof Array &&
+      seed_frame[0] instanceof Array &&
+      typeof seed_frame[0][0] === 'number' &&
+      (() => {
+        this.gridBinary = seed_frame;
+        this.height = seed_frame.length;
+        this.width = seed_frame[0].length;
+      })();
+
+    this.interval = null;
+    this._to = null;
+    this.framesElapsed = 0;
+    this.useRequestAnimationFrame = use_raf || true;
+    this.render = ts => render(this.gridBinary, this.framesElapsed, ts);
+
+    this._populateGameGrid(true);
+  }
 }
 
-GameOfLifeClassic.prototype._generateCoordArray = function(width, height) {
-    
-} 
+GameOfLifeClassic.prototype._generateCoordArray = function(width, height) {};
 
-
-
-
-
-
-
-
-
-
-
-
-const dState = "·";
-const lState = "•";
+const dState = '·';
+const lState = '•';
 
 const getGridCoordinateArray = (grid_width, grid_height) =>
   new Array(grid_width)
@@ -140,10 +118,10 @@ const grid1CoordsWithNeighbors = getCellNeighborCoordinatesArray(10, 10, true);
 
 window.stripGridArrayForRender = grid =>
   JSON.stringify(grid)
-    .replace(/(\],)/g, "<br>")
-    .replace(/(\[|\])/g, "")
-    .replace(/,/g, "&nbsp;&nbsp;")
-    .replace(/"/g, " ");
+    .replace(/(\],)/g, '<br>')
+    .replace(/(\[|\])/g, '')
+    .replace(/,/g, '&nbsp;&nbsp;')
+    .replace(/"/g, ' ');
 // .replace(/0/g, '.')
 // .replace(/1/g, "•");
 

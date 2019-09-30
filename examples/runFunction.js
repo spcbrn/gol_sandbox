@@ -283,14 +283,14 @@
   );
   const canvasRoot = document.createElement('canvas');
   canvasRoot.setAttribute('id', 'c_root');
-  canvasRoot.setAttribute('width', '512px');
-  canvasRoot.setAttribute('height', '512px');
+  canvasRoot.setAttribute('width', '600px');
+  canvasRoot.setAttribute('height', '600px');
   canvasRoot.setAttribute(
     'style',
     `
         position:absolute;
-        left:calc(50vw - 256px);
-        top:calc(50vh - 256px);
+        left:calc(50vw - 300px);
+        top:calc(50vh - 300px);
         background:#F5F5F5;
     `
   );
@@ -301,8 +301,8 @@
   const ctx = canvas.getContext('2d');
   ctx.font = '24px serif';
 
-  const gridWidth = 96;
-  const gridHeight = 96;
+  const gridWidth = 120;
+  const gridHeight = 120;
   const cellWidth = canvas.width / gridWidth;
   const cellHeight = canvas.height / gridHeight;
 

@@ -37,7 +37,7 @@ const drawRender = (grid_binary, frames_elapsed) => {
   drawText(frames_elapsed);
 };
 
-golCanvas = new GameOfLife({
+golCanvas = new GameOfLifeClassic({
   width: gridWidth,
   height: gridHeight,
   render: drawRender,
